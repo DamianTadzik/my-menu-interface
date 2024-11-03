@@ -27,10 +27,20 @@
  * @info			Remember to declare menu_t elements in my_menu_structure.h
  */
 
-menu_t MM1 = {"A menu",	&MM2, NULL, NULL, NULL, NULL};
-menu_t MM2 = {"B menu",	&MM3, &MM1, NULL, NULL, NULL};
-menu_t MM3 = {"C menu",	&MM4, &MM2, NULL, NULL, NULL};
-menu_t MM4 = {"D menu",	NULL, &MM3, NULL, NULL, NULL};
+menu_t MM1 = {"A menu",			&MM2, NULL, NULL, NULL, NULL};
+menu_t MM2 = {"B menu",			&MM3, &MM1, NULL, NULL, NULL};
+menu_t MM3 = {"C menu",			&MM4, &MM2, NULL, NULL, NULL};
+menu_t MM4 = {"RTC settings",	NULL, &MM3, &RTCS1, NULL, NULL};
+
+menu_t RTCS1 = {"Return",				&RTCS2,	NULL, 	&MM4,	NULL,		NULL};
+menu_t RTCS2 = {"new Hour",				&RTCS3,	&RTCS1,	NULL,	&RTCS2D,	NULL};
+menu_t RTCS3 = {"new Min",				&RTCS4,	&RTCS2,	NULL,	&RTCS3D,	NULL};
+menu_t RTCS4 = {"new Sec",				&RTCS5,	&RTCS3,	NULL,	&RTCS4D,	NULL};
+menu_t RTCS5 = {"new Date",				&RTCS6,	&RTCS4,	NULL,	&RTCS5D,	NULL};
+menu_t RTCS6 = {"new Month",			&RTCS7,	&RTCS5,	NULL,	&RTCS6D,	NULL};
+menu_t RTCS7 = {"new Year",				&RTCS8,	&RTCS6,	NULL,	&RTCS7D,	NULL};
+static void set_the_time_function(void);
+menu_t RTCS8 = {"Apply new time -f",	NULL,	&RTCS7,	NULL,	NULL,		&set_the_time_function};
 
 /**************************************** NUMERIC ****************************************/
 /**
@@ -45,7 +55,27 @@ extern int data;
 m_data_t D = {&data, 30, 90, 15, NULL}
  */
 
+static int newHour = 0;
+static int newMinute = 0;
+static int newSecond = 0;
+static int newDate = 17;
+static int newMonth = 4;
+static int newYear = 2024;
 
+m_data_t RTCS2D = {&newHour, 0, 23, 1, NULL};
+m_data_t RTCS3D = {&newMinute, 0, 59, 1, NULL};
+m_data_t RTCS4D = {&newSecond, 0, 59, 1, NULL};
+m_data_t RTCS5D = {&newDate, 1, 31, 1, NULL};
+m_data_t RTCS6D = {&newMonth, 1, 12, 1, NULL};
+m_data_t RTCS7D = {&newYear, 2000, 2099, 1, NULL};
+
+#include "my_utilities.h"
+static void set_the_time_function(void)
+{
+	STM_RTC_set_time_and_date((uint8_t)newHour, (uint8_t)newMinute,
+			(uint8_t)newSecond, (uint8_t)newMonth,
+			(uint8_t)newDate, (uint8_t)(newYear - 2000));
+}
 
 /**************************************** ENUM ****************************************/
 /**

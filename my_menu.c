@@ -176,6 +176,19 @@ static void _my_draw_data(void)
 	}
 }
 
+#include "my_utilities.h"
+static void _my_draw_bar(void)
+{
+	uint8_t Hours, Minutes, Seconds;
+	uint16_t Miliseconds;
+	STM_RTC_get_time_and_date(&Hours, &Minutes, &Seconds, &Miliseconds);
+
+	char buf[10];
+	sprintf(buf, "%02d:%02d:%02d", Hours, Minutes, Seconds);
+
+	ssd1306_SetCursor(72, 0);
+	ssd1306_WriteString(buf, Font_7x10, Black);
+}
 //static void _my_plot(void)
 //{
 //	plot_axes();
@@ -411,6 +424,7 @@ void menu_refresh(void)
 		_my_draw_cursor();
 		_my_draw_menu();
 		_my_draw_data();
+		_my_draw_bar();
 	}
 	if (_m_get_mode() == menu_screensaver_mode)
 	{
