@@ -27,29 +27,9 @@
  * @info			Remember to declare menu_t elements in my_menu_structure.h
  */
 
-menu_t MM1 = {"LEDs menu",		&MM2, NULL, &LM1, NULL, NULL};
-		menu_t LM1 = {"RETURN",		&LM2, NULL, &MM1, NULL, NULL};
-		menu_t LM2 = {"Mode:",		&LM3, &LM1, NULL, &LD1, NULL};
-		menu_t LM3 = {"Red",		&LM4, &LM2, NULL, &LD2, NULL};
-		menu_t LM4 = {"Green",		&LM5, &LM3, NULL, &LD3, NULL};
-		menu_t LM5 = {"Blue",		&LM6, &LM4, NULL, &LD4, NULL};
-		menu_t LM6 = {"Speed",		&LM7, &LM5, NULL, &LD5, NULL};
-		menu_t LM7 = {"Brightness",	&LM8, &LM6, NULL, &LD6, NULL};
-		menu_t LM8 = {"No rainbws",	NULL, &LM7, NULL, &LD7, NULL};
-
-menu_t MM2 = {"Plot menu",		&MM3, &MM1, &PM1, NULL, NULL};
-		menu_t PM1 = {"RETURN",		&PM2, NULL, &MM2, NULL, NULL};
-		menu_t PM2 = {"Timescale:",	&PM3, &PM1, NULL, NULL, NULL};
-		menu_t PM3 = {"Sth",		&PM4, &PM2, NULL, NULL, NULL};
-		menu_t PM4 = {"Other shit",	NULL, &PM3, NULL, NULL, NULL};
-
-menu_t MM3 = {"Settings",		&MM4, &MM2, NULL, NULL, NULL};
-
-menu_t MM4 = {"Temperature",	&MM5, &MM3, NULL, &MD1, NULL};
-menu_t MM5 = {"Pressure",		&MM6, &MM4, NULL, &MD2, NULL};
-menu_t MM6 = {"Humidity",		NULL, &MM5, NULL, &MD3, NULL};
-
-
+menu_t MM1 = {"A menu",	&MM2, NULL, NULL, NULL, NULL};
+menu_t MM2 = {"B menu",	&MM3, &MM1, NULL, NULL, NULL};
+menu_t MM3 = {"C menu",	NULL, &MM2, NULL, NULL, NULL};
 
 /**************************************** NUMERIC ****************************************/
 /**
@@ -64,29 +44,7 @@ extern int data;
 m_data_t D = {&data, 30, 90, 15, NULL}
  */
 
-extern int r_comp, g_comp, b_comp;
-m_data_t LD2 = {&r_comp, 0, 255, 2};
-m_data_t LD3 = {&g_comp, 0, 255, 2};
-m_data_t LD4 = {&b_comp, 0, 255, 2};
 
-extern int speed;
-m_data_t LD5 = {&speed, 0, 32, 1};
-
-extern int brightness;
-m_data_t LD6 = {&brightness, 0, 255, 8};
-
-extern int num_of_rainbows;
-m_data_t LD7 = {&num_of_rainbows, 1, 8, 1};
-
-int p1 = 0, p2 = 10, p3 = 100;
-m_data_t ED1 = {&p1, 0, 16, 1};
-m_data_t ED2 = {&p2, 0, 64, 4};
-m_data_t ED3 = {&p3, 0, 128, 8};
-
-extern int int_temperature_degc, int_pressure_hpa, int_humidity_percent;
-m_data_t MD1 = {&int_temperature_degc, 0, 0, 0};
-m_data_t MD2 = {&int_pressure_hpa, 0, 0, 0};
-m_data_t MD3 = {&int_humidity_percent, 0, 0, 0};
 
 /**************************************** ENUM ****************************************/
 /**
@@ -136,16 +94,6 @@ m_data_t m_enum_data = {(int*)&enum_var_name, 0, 2, 1, enum_t_aliases}
  * Explanation of approach implemented: https://stackoverflow.com/a/58500930
  */
 
-#include "my_leds.h"
-extern my_leds_mode_t leds_mode;
-const char * const leds_mode_aliases[] =
-{
-		[my_leds_default] = "Defa",
-		[my_leds_manual] = "Manu",
-		[my_leds_auto] = "Auto",
-		[my_leds_rainbow_run] = "Rainbow",
-};
-m_data_t LD1 = {(int*)&leds_mode, 0, 3, 1, leds_mode_aliases};
 
 //extern hm_state_t hm_state;
 //
