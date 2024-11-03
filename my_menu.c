@@ -176,12 +176,10 @@ static void _my_draw_data(void)
 	}
 }
 
-static void _my_plot(void)
-{
-	// TODO finish this plot and all
-	plot_axes();
-}
-
+//static void _my_plot(void)
+//{
+//	plot_axes();
+//}
 
 /* ---------------- Idle mode detection SECTION BEGIN ---------------- */
 static uint8_t _tick_counter = 0;
@@ -194,7 +192,7 @@ static const uint8_t _tick_compare = 40;
 static void _tick_update(void)
 {
 	if (_tick_counter < _tick_compare) _tick_counter++;
-	else if (_tick_counter == _tick_compare) _m_set_mode(menu_screensaver_mode);
+//	else if (_tick_counter == _tick_compare) _m_set_mode(menu_screensaver_mode);
 }
 
 /**
@@ -401,25 +399,6 @@ void menu_enter(void)
 }
 
 
-extern int int_temperature_degc, int_pressure_hpa, int_humidity_percent;
-extern int frc_temperature_degc, frc_pressure_hpa, frc_humidity_percent;
-void my_xd_moment()
-{
-	char buf[32];
-
-	sprintf(buf, "%d.%02d DegC", int_temperature_degc, frc_temperature_degc);
-	ssd1306_SetCursor(12, 15);
-	ssd1306_WriteString(buf, Font_11x18, Black);
-
-	sprintf(buf, "%d.%01d hPa", int_pressure_hpa, frc_pressure_hpa);
-	ssd1306_SetCursor(12, 31);
-	ssd1306_WriteString(buf, Font_11x18, Black);
-
-	sprintf(buf, "%d.%02d %%RH", int_humidity_percent, frc_humidity_percent);
-	ssd1306_SetCursor(12, 46);
-	ssd1306_WriteString(buf, Font_11x18, Black);
-}
-
 void menu_refresh(void)
 {
 	/* This code fragment is responsible for idle detection */
@@ -435,8 +414,7 @@ void menu_refresh(void)
 	}
 	if (_m_get_mode() == menu_screensaver_mode)
 	{
-		_my_plot();
-		my_xd_moment();
+//		_my_plot();
 	}
 
 	ssd1306_UpdateScreen();

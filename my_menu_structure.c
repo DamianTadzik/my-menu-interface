@@ -29,7 +29,8 @@
 
 menu_t MM1 = {"A menu",	&MM2, NULL, NULL, NULL, NULL};
 menu_t MM2 = {"B menu",	&MM3, &MM1, NULL, NULL, NULL};
-menu_t MM3 = {"C menu",	NULL, &MM2, NULL, NULL, NULL};
+menu_t MM3 = {"C menu",	&MM4, &MM2, NULL, NULL, NULL};
+menu_t MM4 = {"D menu",	NULL, &MM3, NULL, NULL, NULL};
 
 /**************************************** NUMERIC ****************************************/
 /**

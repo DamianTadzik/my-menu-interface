@@ -11,7 +11,7 @@
 #include "my_menu.h"
 
 /* main menu */
-menu_t MM1, MM2, MM3;
+menu_t MM1, MM2, MM3, MM4;
 
 // TODO update menu init fucntion so MM2 MM3 and MM1 are not used? xd
 #define ASSERT_ENUM_ALIASES(sarray, max) \
