@@ -29,7 +29,7 @@
 
 menu_t MM1 = {"A menu",			&MM2, NULL, NULL, NULL, NULL};
 menu_t MM2 = {"B menu",			&MM3, &MM1, NULL, NULL, NULL};
-menu_t MM3 = {"C menu",			&MM4, &MM2, NULL, NULL, NULL};
+menu_t MM3 = {"HX711 settings",	&MM4, &MM2, &HX1, NULL, NULL};
 menu_t MM4 = {"RTC settings",	NULL, &MM3, &RTCS1, NULL, NULL};
 
 menu_t RTCS1 = {"Return",				&RTCS2,	NULL, 	&MM4,	NULL,		NULL};
@@ -41,6 +41,13 @@ menu_t RTCS6 = {"new Month",			&RTCS7,	&RTCS5,	NULL,	&RTCS6D,	NULL};
 menu_t RTCS7 = {"new Year",				&RTCS8,	&RTCS6,	NULL,	&RTCS7D,	NULL};
 static void set_the_time_function(void);
 menu_t RTCS8 = {"Apply new time -f",	NULL,	&RTCS7,	NULL,	NULL,		&set_the_time_function};
+
+menu_t HX1 = {"Return",					&HX2,	NULL,	&MM3,	NULL,	NULL};
+menu_t HX2 = {"Status",					&HX3,	&HX1,	NULL,	NULL,	NULL};
+menu_t HX3 = {"Chan&gain",				&HX4,	&HX2,	NULL,	&HXD1,	NULL};
+menu_t HX4 = {"Raw",					&HX5,	&HX3,	NULL,	&HXD2,	NULL};
+menu_t HX5 = {"opt",					NULL,	&HX4,	NULL,	NULL,	NULL};
+
 
 /**************************************** NUMERIC ****************************************/
 /**
@@ -62,12 +69,12 @@ static int newDate = 17;
 static int newMonth = 4;
 static int newYear = 2024;
 
-m_data_t RTCS2D = {&newHour, 0, 23, 1, NULL};
-m_data_t RTCS3D = {&newMinute, 0, 59, 1, NULL};
-m_data_t RTCS4D = {&newSecond, 0, 59, 1, NULL};
-m_data_t RTCS5D = {&newDate, 1, 31, 1, NULL};
-m_data_t RTCS6D = {&newMonth, 1, 12, 1, NULL};
-m_data_t RTCS7D = {&newYear, 2000, 2099, 1, NULL};
+m_data_t RTCS2D = {&newHour, 0, 23, 1, NULL,	DATA_MUTABLE};
+m_data_t RTCS3D = {&newMinute, 0, 59, 1, NULL,	DATA_MUTABLE};
+m_data_t RTCS4D = {&newSecond, 0, 59, 1, NULL,	DATA_MUTABLE};
+m_data_t RTCS5D = {&newDate, 1, 31, 1, NULL,	DATA_MUTABLE};
+m_data_t RTCS6D = {&newMonth, 1, 12, 1, NULL,	DATA_MUTABLE};
+m_data_t RTCS7D = {&newYear, 2000, 2099, 1, NULL,	DATA_MUTABLE};
 
 #include "my_utilities.h"
 static void set_the_time_function(void)
@@ -77,6 +84,17 @@ static void set_the_time_function(void)
 			(uint8_t)newDate, (uint8_t)(newYear - 2000));
 }
 
+
+#include "my_HX711.h"
+extern HX_channel_and_gain_t pulses_selection;
+const char * const HX_channel_and_gain_t_aliases[] = {
+		[CH_A_GAIN_128] = "A 128",
+		[CH_B_GAIN_32] = "B 32",
+		[CH_A_GAIN_64] = "A 64",
+};
+m_data_t HXD1 = {(int*)&pulses_selection, 0, 2, 1, HX_channel_and_gain_t_aliases, DATA_MUTABLE};	//FIXME
+int raw = 0;
+m_data_t HXD2 = {&raw, 0, 2, 1, NULL, DATA_NOT_MUTABLE};
 /**************************************** ENUM ****************************************/
 /**
  *	@brief			For enum it is almost the same as for the numeric data type, you just need
@@ -124,6 +142,7 @@ m_data_t m_enum_data = {(int*)&enum_var_name, 0, 2, 1, enum_t_aliases}
  *
  * Explanation of approach implemented: https://stackoverflow.com/a/58500930
  */
+
 
 
 //extern hm_state_t hm_state;

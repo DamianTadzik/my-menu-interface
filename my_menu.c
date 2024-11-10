@@ -297,7 +297,7 @@ void menu_prev(void)
 void menu_enter(void)
 {
 	_tick_reset();
-	if (menu_current_ptr->data)
+	if (menu_current_ptr->data && menu_current_ptr->data->mutable == DATA_MUTABLE)
 	{
 		/* Data edit mode enter/exit */
 		if (menu_data_edit_mode == _m_get_mode()) _m_set_mode(menu_browse_mode);

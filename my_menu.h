@@ -26,12 +26,18 @@ typedef struct menu_t{
 	void (*function)(void);			/* Pointer to a function */
 } menu_t;
 
+typedef enum{
+	DATA_NOT_MUTABLE,
+	DATA_MUTABLE,
+} is_data_mutable_t;
+
 typedef struct m_data_t{
 	int * data;
 	int lower_bound;
 	int upper_bound;
 	int delta_per_step;
 	const char * const * aliases;
+	is_data_mutable_t mutable;
 } m_data_t;
 
 typedef enum{
