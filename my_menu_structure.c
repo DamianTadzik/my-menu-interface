@@ -27,26 +27,40 @@
  * @info			Remember to declare menu_t elements in my_menu_structure.h
  */
 
-menu_t MM1 = {"A menu",			&MM2, NULL, NULL, NULL, NULL};
-menu_t MM2 = {"B menu",			&MM3, &MM1, NULL, NULL, NULL};
-menu_t MM3 = {"HX711 settings",	&MM4, &MM2, &HX1, NULL, NULL};
-menu_t MM4 = {"RTC settings",	NULL, &MM3, &RTCS1, NULL, NULL};
+menu_t MM1 = {"CAN diagnostic",			&MM2,		NULL,		&CANDG1,NULL,	NULL};
+menu_t MM2 = {"uSD diagnostic",			&MM3,		&MM1,		&SDDG1,	NULL,	NULL};
+menu_t MM3 = {"HX711 settings",			&MM4,		&MM2,		&HX1,	NULL,	NULL};
+menu_t MM4 = {"RTC settings",			NULL,		&MM3,		&RTCS1,	NULL,	NULL};
 
-menu_t RTCS1 = {"Return",				&RTCS2,	NULL, 	&MM4,	NULL,		NULL};
-menu_t RTCS2 = {"new Hour",				&RTCS3,	&RTCS1,	NULL,	&RTCS2D,	NULL};
-menu_t RTCS3 = {"new Min",				&RTCS4,	&RTCS2,	NULL,	&RTCS3D,	NULL};
-menu_t RTCS4 = {"new Sec",				&RTCS5,	&RTCS3,	NULL,	&RTCS4D,	NULL};
-menu_t RTCS5 = {"new Date",				&RTCS6,	&RTCS4,	NULL,	&RTCS5D,	NULL};
-menu_t RTCS6 = {"new Month",			&RTCS7,	&RTCS5,	NULL,	&RTCS6D,	NULL};
-menu_t RTCS7 = {"new Year",				&RTCS8,	&RTCS6,	NULL,	&RTCS7D,	NULL};
+menu_t CANDG1 = {"Return",				&CANDG2,	NULL,		&MM1,	NULL,	NULL};
+menu_t CANDG2 = {"Msgs/s",				&CANDG3,	&CANDG1,	NULL,	&CDD1,	NULL};
+menu_t CANDG3 = {"--",					&CANDG4,	&CANDG2,	NULL,	NULL,	NULL};
+menu_t CANDG4 = {"--",					&CANDG5,	&CANDG3,	NULL,	NULL,	NULL};
+menu_t CANDG5 = {"--",					&CANDG6,	&CANDG4,	NULL,	NULL,	NULL};
+menu_t CANDG6 = {"JBH",					NULL,		&CANDG5,	NULL,	NULL,	NULL};
+
+menu_t SDDG1 = {"Return",				&SDDG2,		NULL,		&MM2,	NULL,	NULL};
+menu_t SDDG2 = {"status",				&SDDG3,		&SDDG1,		NULL,	NULL,	NULL};
+menu_t SDDG3 = {"fil num",				&SDDG4,		&SDDG2,		NULL,	NULL,	NULL};
+menu_t SDDG4 = {"fil size",				&SDDG5,		&SDDG3,		NULL,	NULL,	NULL};
+menu_t SDDG5 = {"--",					&SDDG6,		&SDDG4,		NULL,	NULL,	NULL};
+menu_t SDDG6 = {"--",					NULL,		&SDDG5,		NULL,	NULL,	NULL};
+
+menu_t HX1 = {"Return",					&HX2,		NULL,		&MM3,	NULL,	NULL};
+menu_t HX2 = {"Chan&gain",				&HX3,		&HX1,		NULL,	&HXD1,	NULL};
+menu_t HX3 = {"Raw",					&HX4,		&HX2,		NULL,	&HXD2,	NULL};
+menu_t HX4 = {"Status",					NULL,		&HX3,		NULL,	&HXD3,	NULL};
+menu_t HX5 = {"nimpl",					NULL,		NULL,		NULL,	NULL,	NULL};
+
+menu_t RTCS1 = {"Return",				&RTCS2,		NULL, 		&MM4,	NULL,		NULL};
+menu_t RTCS2 = {"new Hour",				&RTCS3,		&RTCS1,		NULL,	&RTCS2D,	NULL};
+menu_t RTCS3 = {"new Min",				&RTCS4,		&RTCS2,		NULL,	&RTCS3D,	NULL};
+menu_t RTCS4 = {"new Sec",				&RTCS5,		&RTCS3,		NULL,	&RTCS4D,	NULL};
+menu_t RTCS5 = {"new Date",				&RTCS6,		&RTCS4,		NULL,	&RTCS5D,	NULL};
+menu_t RTCS6 = {"new Month",			&RTCS7,		&RTCS5,		NULL,	&RTCS6D,	NULL};
+menu_t RTCS7 = {"new Year",				&RTCS8,		&RTCS6,		NULL,	&RTCS7D,	NULL};
 static void set_the_time_function(void);
-menu_t RTCS8 = {"Apply new time -f",	NULL,	&RTCS7,	NULL,	NULL,		&set_the_time_function};
-
-menu_t HX1 = {"Return",					&HX2,	NULL,	&MM3,	NULL,	NULL};
-menu_t HX2 = {"Status",					&HX3,	&HX1,	NULL,	NULL,	NULL};
-menu_t HX3 = {"Chan&gain",				&HX4,	&HX2,	NULL,	&HXD1,	NULL};
-menu_t HX4 = {"Raw",					&HX5,	&HX3,	NULL,	&HXD2,	NULL};
-menu_t HX5 = {"opt",					NULL,	&HX4,	NULL,	NULL,	NULL};
+menu_t RTCS8 = {"Apply new time -f",	NULL,		&RTCS7,		NULL,	NULL,		&set_the_time_function};
 
 
 /**************************************** NUMERIC ****************************************/
@@ -61,6 +75,9 @@ menu_t HX5 = {"opt",					NULL,	&HX4,	NULL,	NULL,	NULL};
 extern int data;
 m_data_t D = {&data, 30, 90, 15, NULL}
  */
+
+int g_incoming_can_messages_per_second = 0;
+m_data_t CDD1 = {&g_incoming_can_messages_per_second, 0, 1, 1, NULL, DATA_NOT_MUTABLE};
 
 static int newHour = 0;
 static int newMinute = 0;
@@ -93,8 +110,18 @@ const char * const HX_channel_and_gain_t_aliases[] = {
 		[CH_A_GAIN_64] = "A 64",
 };
 m_data_t HXD1 = {(int*)&pulses_selection, 0, 2, 1, HX_channel_and_gain_t_aliases, DATA_MUTABLE};	//FIXME
-int raw = 0;
-m_data_t HXD2 = {&raw, 0, 2, 1, NULL, DATA_NOT_MUTABLE};
+
+extern int load_cell_raw_vaule_int;
+m_data_t HXD2 = {&load_cell_raw_vaule_int, 0, 2, 1, NULL, DATA_NOT_MUTABLE};
+
+extern HX_state_t current_state;
+const char * const HX_state_t_aliases[] = {
+		[HX_IDLE] = "MEAS",
+		[HX_RECEIVE] = "MEAS",
+		[HX_ERROR] = "HALT",
+};
+m_data_t HXD3 = {(int*)&current_state, 0, 0, 1, HX_state_t_aliases, DATA_NOT_MUTABLE};
+
 /**************************************** ENUM ****************************************/
 /**
  *	@brief			For enum it is almost the same as for the numeric data type, you just need
@@ -157,11 +184,6 @@ m_data_t m_enum_data = {(int*)&enum_var_name, 0, 2, 1, enum_t_aliases}
 //m_data_t D_E = {(int*)&hm_state, 0, 2, 1, hm_state_aliases};
 /* ^ This line, can trigger a warning [-Waddress-of-packed-member] */
 
-
-//extern AT_commands_t cATcmd;
-//extern const char * const AT_commands[];
-//
-//m_data_t D_ATC = {(int*)&cATcmd, 0, 2, 1, AT_commands};
 
 
 /**************************************** FUNCTION ****************************************/

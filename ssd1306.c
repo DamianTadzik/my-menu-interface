@@ -15,7 +15,7 @@ void ssd1306_WriteCommand(uint8_t byte) {
 	UNUSED(res);
 }
 
-// Send data
+// Send data	// FIXME data writes should be in interrupt or DMA mode because they take sooo long
 void ssd1306_WriteData(uint8_t* buffer, size_t buff_size) {
 	HAL_StatusTypeDef res = HAL_I2C_Mem_Write(&SSD1306_I2C_PORT, SSD1306_I2C_ADDR, 0x40, 1, buffer, buff_size, HAL_MAX_DELAY);
 	UNUSED(res);
