@@ -109,7 +109,7 @@ const char * const HX_channel_and_gain_t_aliases[] = {
 		[CH_B_GAIN_32] = "B 32",
 		[CH_A_GAIN_64] = "A 64",
 };
-m_data_t HXD1 = {(int*)&pulses_selection, 0, 2, 1, HX_channel_and_gain_t_aliases, DATA_MUTABLE};	//FIXME
+m_data_t HXD1 = {(int*)&pulses_selection, 0, 2, 1, HX_channel_and_gain_t_aliases, DATA_MUTABLE};
 
 extern int load_cell_raw_vaule_int;
 m_data_t HXD2 = {&load_cell_raw_vaule_int, 0, 2, 1, NULL, DATA_NOT_MUTABLE};
